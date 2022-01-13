@@ -1,6 +1,65 @@
-<h1>Eventos</h1>
-<div *ngFor="let item of eventos">
-  <p>Tema: {{item.tema}}</p>
-  <p>Local: {{item.local}}</p>
-</div>
+<h2>Eventos</h2>
+<hr>
 
+<div action="" class="form-inlne">
+  <div class="form-group mb-2">
+    <label class="me-2">Filtro:  </label>
+    <input
+    type="text"
+     name="form-cotnrol mr-2" placeholder="Buscar"
+    [(ngModel)]="filterList"
+    >
+     <!-- ngModel = twoWay data biding -->
+
+  </div>
+</div>
+<table class="table table-striped">
+  <thead class="bg-dark text-white">
+    <tr>
+      <th>
+        <button type="button" class="btn btn-outline-light btn-sm"
+        (click)="toggleImage()">
+        {{!showImage ? 'Exibir Imagem' : 'Ocultar Imagem'}}</button>
+      </th>
+      <th>ID</th>
+      <th>Tema</th>
+      <th>Local</th>
+      <th>Data</th>
+      <th>Qtd Pessoas</th>
+      <th>Lote</th>
+      <th>Opções</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="eventos && eventos.length;else empty" class="align-middle">
+    <tr *ngFor="let e of eventosFiltrados">
+      <td>
+        <img [collapse]="!showImage"
+        [isAnimated]="true"
+        src="/assets/{{e.imageURL}}"
+         [style.width.px]="widthImg"
+         [style.margin.px]="marginImg"
+         ><!--Property Binding -->
+      </td>
+      <td>{{e.eventoID}}</td>
+      <td>{{e.tema}}</td>
+      <td>{{e.local}}</td>
+      <td>{{e.dataEvento}}</td>
+      <td>{{e.qtdPessoas}}</td>
+      <td>{{e.lote}}</td>
+      <td>
+        <button type="button" class="btn btn-warning btn-sm me-2">Editar</button>
+        <button type="button" class="btn btn-danger btn-sm">Excluir</button>
+      </td>
+    </tr>
+  </tbody>
+  <ng-template #empty>
+    <tfoot>
+      <tr>
+        <td colspan="8" class="text-center">
+          <h4>Nenhum evento encontrado</h4>
+        </td>
+      </tr>
+    </tfoot>
+  </ng-template>
+
+</table>
