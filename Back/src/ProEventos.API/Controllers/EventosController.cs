@@ -9,7 +9,7 @@ using ProEventos.Domain;
 using ProEventos.Persistence.Contextos;
 using ProEventos.Application.Contratos;
 using Microsoft.AspNetCore.Http;
-using ProEventos.API.Dtos;
+using ProEventos.Application.Dtos;
 
 namespace ProEventos.API.Controllers
 {
@@ -30,28 +30,11 @@ namespace ProEventos.API.Controllers
             try
             {
                 var eventos = await _eventoService.GetAllEventosAsync(true);
-                if (eventos == null) return NotFound("Nenhum evento encontrado.");
+                if (eventos == null) return NoContent();
 
-                var eventosRetorno = new List<EventoDto>();
+             
 
-                foreach (var evento in eventos)
-                {
-                    eventosRetorno.Add(new EventoDto(){//a cada item existente, atribuir a um novo objeto passando somente os campos desejados
-                        Id = evento.Id,
-                        Local = evento.Local,
-                        DataEvento = evento.DataEvento.ToString(),
-                        Tema = evento.Tema,
-                        QtdPessoas = evento.QtdPessoas,
-                        ImagemURL = evento.ImagemURL,
-                        Telefone = evento.Telefone,
-                        Email = evento.Email
-
-                    }); // Deixa de expor exatamento o que dominio tem na API
-
-                    
-                }
-
-                return Ok(eventosRetorno);
+                return Ok(eventos);
             }
             catch (Exception ex)
             {
@@ -66,7 +49,7 @@ namespace ProEventos.API.Controllers
             try
             {
                 var evento = await _eventoService.GetEventoByIdAsync(id, true);
-                if (evento == null) return NotFound("Evento por Id não encontrado.");
+                if (evento == null) return NoContent();
 
                 return Ok(evento);
             }
@@ -83,7 +66,7 @@ namespace ProEventos.API.Controllers
             try
             {
                 var evento = await _eventoService.GetAllEventosByTemaAsync(tema, true);
-                if (evento == null) return NotFound("Eventos por tema não encontrados.");
+                if (evento == null) return  NoContent();
 
                 return Ok(evento);
             }
@@ -95,7 +78,7 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Evento model)
+        public async Task<IActionResult> Post(EventoDto model)
         {
             try
             {
@@ -112,7 +95,7 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Evento model)
+        public async Task<IActionResult> Put(int id, EventoDto model)
         {
             try
             {
