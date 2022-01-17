@@ -9,6 +9,7 @@ using ProEventos.Domain;
 using ProEventos.Persistence.Contextos;
 using ProEventos.Application.Contratos;
 using Microsoft.AspNetCore.Http;
+using ProEventos.API.Dtos;
 
 namespace ProEventos.API.Controllers
 {
@@ -31,7 +32,26 @@ namespace ProEventos.API.Controllers
                 var eventos = await _eventoService.GetAllEventosAsync(true);
                 if (eventos == null) return NotFound("Nenhum evento encontrado.");
 
-                return Ok(eventos);
+                var eventosRetorno = new List<EventoDto>();
+
+                foreach (var evento in eventos)
+                {
+                    eventosRetorno.Add(new EventoDto(){//a cada item existente, atribuir a um novo objeto passando somente os campos desejados
+                        Id = evento.Id,
+                        Local = evento.Local,
+                        DataEvento = evento.DataEvento.ToString(),
+                        Tema = evento.Tema,
+                        QtdPessoas = evento.QtdPessoas,
+                        ImagemURL = evento.ImagemURL,
+                        Telefone = evento.Telefone,
+                        Email = evento.Email
+
+                    }); // Deixa de expor exatamento o que dominio tem na API
+
+                    
+                }
+
+                return Ok(eventosRetorno);
             }
             catch (Exception ex)
             {
